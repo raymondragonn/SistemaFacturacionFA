@@ -18,7 +18,7 @@ import { AuthService } from '@/app/servicios/auth.service'
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, FormsModule, ReactiveFormsModule],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule,NgbAlertModule,CommonModule],
   templateUrl: './login.component.html',
   styles: ``,
 })
@@ -38,8 +38,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.signInForm = this.fb.group({
-      email: ['user@demo.com', [Validators.required, Validators.email]],
-      password: ['123456', [Validators.required]],
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]],
     })
   }
 
@@ -49,13 +49,13 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.submitted = true;
-    this.router.navigate(['/index']);
     if (this.signInForm.valid) {
       const username = this.formValues['username'].value
       const password = this.formValues['password'].value
       this.authService.login( username, password).subscribe((res) => {
-        const { token, user } = res as { token: string, user: string };
-        localStorage.setItem('currentUser', JSON.stringify({ username: user, token: token}));  
+        console.log(res);
+        const { token, username } = res as { token: string, username: string };
+        localStorage.setItem('currentUser', JSON.stringify({ username: username, token: token}));  
         this.router.navigate(['']);
       },(error) => {
         console.log(error);

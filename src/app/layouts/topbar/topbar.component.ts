@@ -28,11 +28,14 @@ export class TopbarComponent {
   tabItems = TabItems
   store = inject(Store)
   scrollY = 0
+  
   @Output() mobileMenuButtonClicked = new EventEmitter()
 
   constructor() {
     window.addEventListener('scroll', this.handleScroll, { passive: true })
     this.handleScroll()
+
+   
   }
 
   toggleMobileMenu() {

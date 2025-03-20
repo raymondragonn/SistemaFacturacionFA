@@ -9,7 +9,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms'
-import { RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap'
 
 @Component({
@@ -27,7 +27,7 @@ export class RegisterComponent {
 
   public fb = inject(UntypedFormBuilder)
 
-  constructor(private serviceAuth: AuthService) {
+  constructor(private serviceAuth: AuthService, private router: Router) {
     this.signupForm = this.fb.group(
       {
         username: ['', [Validators.required]],
@@ -63,18 +63,17 @@ export class RegisterComponent {
     if(this.signupForm.valid){
       console.log("Formulario Valido")
       this.serviceAuth.registerUser({username: this.signupForm.value.username, password: this.signupForm.value.password}).subscribe((res => {
+        this.signupForm.reset();
+        this.showAlert = true
+        setTimeout(() => {
+          this.showAlert = false;
+          this.router.navigate(['/auth/log-in']);
+        }, 3000);
         
-        if(res = 'User registered successfully'){
-            
-        }
-
+      
       }), (error) => {
-        if(error.status){
-          this.showAlert = true
-          setTimeout(() => {
-            this.showAlert = false;
-          }, 6000);
-        }
+        console.log(error);
+        
       })
     }
 
