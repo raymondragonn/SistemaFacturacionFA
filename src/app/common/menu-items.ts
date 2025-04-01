@@ -557,17 +557,23 @@ export const MENU_ITEMS: MenuItem[] = [
         parentKey: 'autenticacion',
       },
       {
+        key: 'user-fac',
+        label: 'PostFact',
+        url: '/auth/solFactura',
+        parentKey: 'autenticacion'
+      },
+      {
         key: 'lock-screen',
         label: 'Lock Screen',
         url: '/auth/lock-screen',
         parentKey: 'autenticacion',
       },
       {
-        key: 'maintenance',
-        label: 'Maintenance',
-        url: '/maintenance',
+        key: 'altaFactura',
+        label: 'altaFactura',
+        url: '/altaFactura',
         target: '_blank',
-        parentKey: 'autenticacion',
+        // parentKey: 'autenticacion',
       },
       {
         key: 'error-404',

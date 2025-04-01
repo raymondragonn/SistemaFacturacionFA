@@ -1,41 +1,616 @@
-<div class="container-fluid">
-  <div class="row vh-100 d-flex justify-content-center">
-    <div class="col-12 align-self-center">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-lg-6 mx-auto">
-            <div class="card">
-              <div class="card-body p-5">
-                <div class="text-center">
-                  <img
-                    src="assets/images/extra/card/maintenance.png"
-                    alt=""
-                    class="img-fluid mb-3"
-                  />
-                  <h6 class="mb-2 fw-medium text-dark fs-24">
-                    We are down on maintenance right now
-                  </h6>
-                  <p class="text-muted mb-0 text-wrap fs-15">
-                    This website is currently undergoing Scheduled maintenance.
-                  </p>
-                  <div class="mt-3 text-center">
-                    <a class="btn btn-primary w-50" [routerLink]="'/'"
-                      >Back to Dashboard <i class="fas fa-redo ms-1"></i
-                    ></a>
-                  </div>
-                </div>
-              </div>
-              <!--end card-body-->
-            </div>
-            <!--end card-->
+<style>
+  .navbar{
+    justify-content: space-between !important;
+  }
+  @media (max-width: 512px) {
+    .navbar {
+      justify-content: center !important;
+    }
+    
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light"style="display: flex; " >
+  <div style="margin-left: 1rem;">
+    <img src="assets/images/logo.png" alt="logo" height="55" class="auth-logo" />
+  </div>
+  <div>
+    <a class="navbar-brand " href="#">Facturación Clientes</a>
+  </div>
+  
+</nav>
+
+
+<div class=" justify-content-center container-fluid" style="padding-top: 3rem;">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="align-items-center">
+          <div class="col">
+            <h4 class="card-title">Facturación</h4>
           </div>
           <!--end col-->
         </div>
         <!--end row-->
       </div>
+      <!--end card-header-->
+      <div class="card-body pt-0">
+        <form [formGroup]="formAltaFactura"  id="custom-step">
+          <nav>
+            <div
+              class="nav nav-tabs"
+              id="nav-tab"
+              ngbNav
+              #nav="ngbNav"
+              [(activeId)]="active"
+            >
+              <div [ngbNavItem]="1">
+                <a
+                  class="nav-link py-2"
+                  ngbNavLink
+                  id="step1-tab"
+                  data-bs-toggle="tab"
+                  href="#step1"
+                  >Datos Servicio</a
+                >
+                <ng-template ngbNavContent>
+                  <div class="tab-pane show active" id="step1">
+                    <h4 class="card-title my-4 fs-15">Datos Servicio</h4>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label
+                            for="ddlCreditCardType"
+                            class="col-lg-3 col-form-label text-lg-end"
+                            >Opcion que deseas Facturar</label
+                          >
+                          <div class="col-lg-9">
+                            <select
+                              id="tipoFacturacion"
+                              formControlName="selectedTipoFacturacion"
+                              class="form-select"
+                              
+                            >
+                            
+                            <option value="boletos">Facturación de Boletos</option>
+                            <option value="envios">Facturación de Envíos Primera Plus</option>
+                            <option value="alimentos">Facturación de Consumo de Alimentos</option>
+                              
+                            </select>
+                            <div *ngIf="formAltaFactura.get('selectedTipoFacturacion')?.invalid && formAltaFactura.get('selectedTipoFacturacion')?.touched" class="text-danger">
+                              Selecciona una opción.
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+                    <!--end row-->
+                    <div  class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label
+                            for="txtCompanyBilling"
+                            class="col-lg-3 col-form-label text-lg-end"
+                            >RFC Cliente(Mayusculas)</label
+                          >
+                          <div class="col-lg-9">
+                            <input
+                              id="txtCompanyBilling"
+                              formControlName="rfc"
+                              type="text"
+                              class="form-control"
+                            />
+                          </div>
+                        </div>
+                        <!--end form-group-->
+                      </div>
+                      <!--end col-->
+                      <div class="col-md-6" *ngIf="formAltaFactura.get('selectedTipoFacturacion')?.value === 'boletos' ">
+                        <div class="form-group row mb-2">
+                          <label
+                            for="txtEmailAddressBilling"
+                            class="col-lg-3 col-form-label text-lg-end"
+                            >Token Boleto</label
+                          >
+                          <div class="col-lg-9">
+                            <input
+                              id="txtEmailAddressBilling"
+                              
+                              type="text"
+                              class="form-control"
+                              formControlName="tokenBoleto"
+                              
+                            />
+                          </div>
+                        </div>
+                        <!--end form-group-->
+                      </div>
+                      <div class="col-md-6" *ngIf="formAltaFactura.get('selectedTipoFacturacion')?.value === 'envios' ">
+                        <div class="form-group row mb-2">
+                          <label
+                            for="txtEmailAddressBilling"
+                            class="col-lg-3 col-form-label text-lg-end"
+                            >Token de la Guia</label
+                          >
+                          <div class="col-lg-9">
+                            <input
+                              id="txtEmailAddressBilling"
+                              formControlName="tokenGuia"
+                              type="text"
+                              class="form-control"
+                              
+                            />
+                          </div>
+                        </div>
+                        <!--end form-group-->
+                      </div>
+
+                      <div class="col-md-6" *ngIf="formAltaFactura.get('selectedTipoFacturacion')?.value === 'alimentos' ">
+                        <div class="form-group row mb-2">
+                          <label
+                            for="txtEmailAddressBilling"
+                            class="col-lg-3 col-form-label text-lg-end"
+                            >Ticket de compra</label
+                          >
+                          <div class="col-lg-9">
+                            <input
+                              id="txtEmailAddressBilling"
+                              formControlName="ticketCompra"
+                              type="text"
+                              class="form-control"
+                              
+                            />
+                          </div>
+                        </div>
+                        
+                      </div>
+
+                      
+                    </div>
+                    
+                    
+                    
+                    <div class="row" *ngIf="formAltaFactura.get('selectedTipoFacturacion')?.value === 'alimentos'">
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label
+                            for="example-datetime-local-input"
+                            class="col-sm-2 col-form-label text-lg-end"
+                            >Fecha Venta</label
+                          >
+                          <div class="col-sm-10">
+                            <input
+                              class="form-control"
+                              type="datetime-local"
+                              value="2011-08-19T13:45:00"
+                              id="example-datetime-local-input"
+                              formControlName="fechaCompra"
+                              
+                            />
+                          </div> 
+                        </div>
+                        
+                      </div>
+                    
+                    </div>
+                    <!--end row-->
+                    <div class="mt-2">
+                      <button
+                        type="button"
+                        (click)="nav.select(2)"
+                        id="step1Next"
+                        class="btn btn-primary float-end"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+              <div [ngbNavItem]="2">
+                <a
+                  class="nav-link py-2"
+                  id="step2-tab"
+                  ngbNavLink
+                  data-bs-toggle="tab"
+                  href="#step2"
+                  >Datos Fiscales</a
+                >
+                <ng-template ngbNavContent>
+                  <div class="tab-pane show active" id="step2">
+                    <h4 class="card-title my-4 fs-15">Datos Fiscales</h4>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label
+                            for="ddlCreditCardType"
+                            class="col-lg-3 col-form-label text-lg-end"
+                            >Uso de CFDI</label
+                          >
+                          <div class="col-lg-9">
+                            <select
+                              id="tipoFacturacion"
+                              formControlName="UsoCFDI"
+                              class="form-select"
+                              
+                              >
+                            
+                            <option value="boletos">Gastos en general</option>
+                            <option value="envios">Adquisición de mercancías</option>
+                            <option value="alimentos">Facturación de Consumo de Alimentos</option>
+                              
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <!--end col-->
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label
+                            for="txtLastNameShipping"
+                            class="col-lg-3 col-form-label text-lg-end"
+                            >Domicilio Fiscal</label
+                          >
+                          <div class="col-lg-9">
+                            <input
+                              id="txtLastNameShipping"
+                              formControlName="domicilioFiscal"
+                              type="text"
+                              class="form-control"
+                              
+                            />
+                          </div>
+                        </div>
+                        <!--end form-group-->
+                      </div>
+                      <!--end col-->
+                    </div>
+                    <!--end row-->
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label
+                            for="txtCompanyShipping"
+                            class="col-lg-3 col-form-label text-lg-end"
+                            >Correo Electronico</label
+                          >
+                          <div class="col-lg-9">
+                            <input
+                              id="txtCompanyShipping"
+                              formControlName="correoElectronico"
+                              type="text"
+                              class="form-control"
+                        
+                            />
+                          </div>
+                        </div>
+                        <!--end form-group-->
+                      </div>
+                      <!--end col-->
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label
+                            for="txtEmailAddressShipping"
+                            class="col-lg-3 col-form-label text-lg-end"
+                            >Forma de Pago</label
+                          >
+                          <div class="col-lg-9">
+                            <input
+                              id="txtEmailAddressShipping"
+                              formControlName="formaPago"
+                              type="text"
+                              class="form-control"
+                              
+                            />
+                          </div>
+                        </div>
+                        <!--end form-group-->
+                      </div>
+                      <!--end col-->
+                    </div>
+                    <!--end row-->
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label
+                            for="ddlCreditCardType"
+                            class="col-lg-3 col-form-label text-lg-end"
+                            >Metodo de Pago</label
+                          >
+                          <div class="col-lg-9">
+                            <select
+                              id="tipoFacturacion"
+                              formControlName="metodoPago"
+                              class="form-select"
+                              
+                            >
+                            
+                            <option value="boletos">Efectivo</option>
+                            <option value="envios">Transferencía</option>
+                            <option value="alimentos">Tarjeta</option>
+                              
+                            </select>
+                          </div>
+                        </div>
+                        <!--end form-group-->
+                      </div>
+                      <!--end col-->
+                      <!-- <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label
+                            for="txtStateProvinceShipping"
+                            class="col-lg-3 col-form-label text-lg-end"
+                            >Declaration</label
+                          >
+                          <div class="col-lg-9">
+                            <input
+                              id="txtStateProvinceShipping"
+                              name="txtStateProvinceShipping"
+                              type="text"
+                              class="form-control"
+                            />
+                          </div>
+                        </div>
+                        
+                      </div> -->
+                      <!--end col-->
+                    </div>
+                    <!--end row-->
+                    <div>
+                      <button
+                        type="button"
+                        id="step2Prev"
+                        (click)="nav.select(1)"
+                        class="btn btn-secondary float-start mt-2"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        type="button"
+                        id="step2Next"
+                        (click)="nav.select(3)"
+                        class="btn btn-primary float-end mt-2"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+              <div [ngbNavItem]="3">
+                <a
+                  class="nav-link py-2"
+                  ngbNavLink
+                  id="step3-tab"
+                  data-bs-toggle="tab"
+                  href="#step3"
+                  >Confirmar Datos</a
+                >
+                <ng-template ngbNavContent>
+                  <div class="tab-pane show active" id="step3">
+                    <h4 class="card-title my-4 fs-15">Confirmar Datos</h4>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label class="col-lg-3 col-form-label text-lg-end">Opción que deseas Facturar</label>
+                          <div class="col-lg-9">
+                            <p class="form-control-plaintext">{{ formAltaFactura.get('selectedTipoFacturacion')?.value }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    
+                    </div>
+                    <div  class="row">
+                      <!-- RFC Cliente -->
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label class="col-lg-3 col-form-label text-lg-end">RFC Cliente (Mayúsculas)</label>
+                          <div class="col-lg-9">
+                            <p class="form-control-plaintext">{{ formAltaFactura.get('rfc')?.value }}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Token Boleto -->
+                      <div class="col-md-6" *ngIf="formAltaFactura.get('selectedTipoFacturacion')?.value === 'boletos'">
+                        <div class="form-group row mb-2">
+                          <label class="col-lg-3 col-form-label text-lg-end">Token Boleto</label>
+                          <div class="col-lg-9">
+                            <p class="form-control-plaintext">{{ formAltaFactura.get('tokenBoleto')?.value }}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Token de la Guía -->
+                      <div class="col-md-6" *ngIf="formAltaFactura.get('selectedTipoFacturacion')?.value === 'envios'">
+                        <div class="form-group row mb-2">
+                          <label class="col-lg-3 col-form-label text-lg-end">Token de la Guía</label>
+                          <div class="col-lg-9">
+                            <p class="form-control-plaintext">{{ formAltaFactura.get('tokenGuia')?.value }}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Ticket de Compra -->
+                      <div class="col-md-6" *ngIf="formAltaFactura.get('selectedTipoFacturacion')?.value === 'alimentos'">
+                        <div class="form-group row mb-2">
+                          <label class="col-lg-3 col-form-label text-lg-end">Ticket de Compra</label>
+                          <div class="col-lg-9">
+                            <p class="form-control-plaintext">{{ formAltaFactura.get('ticketCompra')?.value }}</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+
+                    <div class="row" *ngIf="formAltaFactura.get('selectedTipoFacturacion')?.value === 'alimentos'">
+                      <!-- Fecha Venta -->
+                      <div class="col-md-6" *ngIf="formAltaFactura.get('selectedTipoFacturacion')?.value === 'alimentos'">
+                        <div class="form-group row mb-2">
+                          <label class="col-lg-3 col-form-label text-lg-end">Fecha Venta</label>
+                          <div class="col-lg-9">
+                            <p class="form-control-plaintext">{{ formAltaFactura.get('fechaCompra')?.value }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    
+                    </div>
+                    
+                    <div class="row">
+                      <!-- Uso de CFDI -->
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label class="col-lg-3 col-form-label text-lg-end">Uso de CFDI</label>
+                          <div class="col-lg-9">
+                            <p class="form-control-plaintext">{{ formAltaFactura.get('UsoCFDI')?.value }}</p>
+                          </div>
+                        </div>
+                      </div>
+
+
+
+                      <!-- Domicilio Fiscal -->
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label class="col-lg-3 col-form-label text-lg-end">Domicilio Fiscal</label>
+                          <div class="col-lg-9">
+                            <p class="form-control-plaintext">{{ formAltaFactura.get('domicilioFiscal')?.value }}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <!--end col-->
+                    </div>
+
+                    <div class="row">
+                      <!-- Correo Electrónico -->
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label class="col-lg-3 col-form-label text-lg-end">Correo Electrónico</label>
+                          <div class="col-lg-9">
+                            <p class="form-control-plaintext">{{ formAltaFactura.get('correoElectronico')?.value }}</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Forma de Pago -->
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label class="col-lg-3 col-form-label text-lg-end">Forma de Pago</label>
+                          <div class="col-lg-9">
+                            <p class="form-control-plaintext">{{ formAltaFactura.get('formaPago')?.value }}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!--end col-->
+                      
+                      <!--end col-->
+                    </div>
+
+                    <div class="row">
+                      <!-- Método de Pago -->
+                      <div class="col-md-6">
+                        <div class="form-group row mb-2">
+                          <label class="col-lg-3 col-form-label text-lg-end">Método de Pago</label>
+                          <div class="col-lg-9">
+                            <p class="form-control-plaintext">{{ formAltaFactura.get('metodoPago')?.value }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--end row-->
+                    <div>
+                      <button
+                        type="button"
+                        id="step3Prev"
+                        (click)="nav.select(2)"
+                        class="btn btn-secondary float-start mt-2"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        type="button"
+                        id="step4Finish"
+                        class="btn btn-danger float-end mt-2"
+                       (click)="onSubmit()">
+                        Generar Factura
+                      </button>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+              <!-- <div [ngbNavItem]="4"> -->
+                <!-- <a
+                  class="nav-link py-2"
+                  ngbNavLink
+                  id="step4-tab"
+                  data-bs-toggle="tab"
+                  href="#step4"
+                  >Confirm Detail</a
+                > -->
+                <!-- <ng-template ngbNavContent>
+                  <div class="tab-pane show active" id="step4">
+                    <h4 class="card-title my-4 fs-15">Confirm Detail</h4>
+                    <div class="form-check my-4 text-center">
+                      <img
+                        src="assets/images/extra/task.png"
+                        class="mb-3"
+                        height="60"
+                        alt=""
+                      />
+                      <h4 class="mb-1 fs-16">You are all set!</h4>
+                      <p class="text-muted">
+                        Now you can access your account anytime anywhere
+                      </p>
+                      <div>
+                        <input
+                          class="form-check-input float-none"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckDefault"
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          I agree with the Terms and Conditions.
+                        </label>
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        type="button"
+                        id="step4Prev"
+                        (click)="nav.select(3)"
+                        class="btn btn-secondary float-start mt-2"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        type="button"
+                        id="step4Finish"
+                        class="btn btn-danger float-end mt-2"
+                      >
+                        Finish
+                      </button>
+                    </div>
+                  </div>
+                </ng-template> -->
+              <!-- </div> -->
+            </div>
+          </nav>
+          <div
+            class="tab-content"
+            id="nav-tabContent"
+            [ngbNavOutlet]="nav"
+          ></div>
+        </form>
+        <!--end form-->
+      </div>
       <!--end card-body-->
     </div>
-    <!--end col-->
+    <!--end card-->
   </div>
-  <!--end row-->
+  <!--end col-->
 </div>
+<!--end row-->

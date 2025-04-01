@@ -43,8 +43,8 @@ export const routes: Routes = [
     data: { title: '500 - Error' },
   },
   {
-    path: 'maintenance',
+    path: 'altaFactura',
     component: MaintenanceComponent,
-    data: { title: 'Maintenance' },
+    data: { title: 'altaFactura' },
   },
 ]
